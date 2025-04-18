@@ -1,5 +1,6 @@
 
 buildscript {
+// Make Sure Setting grate jetbrain version same kotlin_version
     val kotlin_version by extra("2.1.20")  // Make sure this is the Kotlin version you are using
     repositories {
         google()
