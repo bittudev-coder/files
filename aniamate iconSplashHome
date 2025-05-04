@@ -1,0 +1,82 @@
+import 'package:flutter/material.dart';
+import 'dart:async';
+
+void main() {
+  runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: SplashScreen(),
+  ));
+}
+
+class SplashScreen extends StatefulWidget {
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    // Wait for 3 seconds then go to HomeScreen
+    Timer(Duration(seconds: 3), () {
+      Navigator.pushReplacement(
+        context,
+        PageRouteBuilder(
+          transitionDuration: Duration(seconds: 2),
+          pageBuilder: (_, __, ___) => HomeScreen(),
+        ),
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(
+        child: Hero(
+          tag: 'locationIcon',
+          child: Icon(
+            Icons.location_on,
+            size: 100,
+            color: Colors.blue,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        children: [
+          // Positioned Hero icon in top-left
+          Positioned(
+            top: 40,
+            left: 20,
+            child: Hero(
+              tag: 'locationIcon',
+              child: Icon(
+                Icons.location_on,
+                size: 30,
+                color: Colors.blue,
+              ),
+            ),
+          ),
+          Center(
+            child: Text(
+              "Home Screen",
+              style: TextStyle(fontSize: 24),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+//-----------
