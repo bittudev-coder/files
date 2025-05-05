@@ -79,4 +79,144 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-//-----------
+//----------- new -------------------
+
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:srankbazaar/Screens/MainHome.dart';
+import 'package:iconsax/iconsax.dart';
+
+import '../CustomWidget/SrankText.dart';
+import '../StateManagement/AdressProvider.dart';
+
+class SplashLocation extends StatefulWidget {
+  const SplashLocation({super.key});
+
+  @override
+  State<SplashLocation> createState() => _SplashLocationState();
+}
+
+class _SplashLocationState extends State<SplashLocation> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _leftAnimation;
+  late Animation<double> _topAnimation;
+  late Animation<double> _sizeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    );
+
+    // We define the screen size in didChangeDependencies because context size is available there
+    // So temporarily delay setting animation to after frame rendered
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final screenWidth = MediaQuery.of(context).size.width;
+      final screenHeight = MediaQuery.of(context).size.height;
+
+      final startLeft = screenWidth / 2 - 100 / 2; // center with initial size 100
+      final startTop = screenHeight / 2 - 100 / 2;
+
+      final endLeft = 20.0;
+      final endTop = 20.0;
+
+      _leftAnimation = Tween<double>(begin: startLeft, end: endLeft).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+      _topAnimation = Tween<double>(begin: startTop, end: endTop).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+      _sizeAnimation = Tween<double>(begin: 100, end: 30).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+
+      // Start animation
+      _controller.forward();
+
+      // Navigate when animation completes
+      _controller.addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          Navigator.pushReplacement(
+            context,
+            PageRouteBuilder(
+              transitionDuration: const Duration(milliseconds: 1000),
+              pageBuilder: (_, __, ___) => const MainPage(),
+            ),
+          );
+        }
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.green,
+      body: SafeArea(
+        child: Stack(
+          children: [
+            AnimatedBuilder(
+              animation: _controller,
+              builder: (context, child) {
+                double left = _leftAnimation.value;
+                double top = _topAnimation.value;
+                double size = _sizeAnimation.value;
+
+                return Positioned(
+                  left: left,
+                  top: top,
+                  child: Hero(
+                    tag: 'locationIcon',
+                    child: Icon(
+                      Iconsax.location5,
+                      color: Colors.grey[300],
+                      size: size,
+                    ),
+                  ),
+                );
+              },
+            ),
+            // Text centered in the screen, fade out as animation progresses
+            AnimatedBuilder(
+              animation: _controller,
+              builder: (context, child) {
+                double opacity = 1.0 - _controller.value;
+                return Opacity(
+                  opacity: opacity,
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 150),
+                        child: Consumer<AddressProvider>(
+                          builder: (context, home, child) {
+                            String address = home.placemark != null
+                                ? "${home.placemark!.subLocality ?? ''}, "
+                                "${home.placemark!.locality ?? ''}, "
+                                "${home.placemark!.administrativeArea ?? ''}, "
+                                // "${home.placemark!.postalCode ?? ''}, "
+                                : "";
+                            return SranKText(
+                              TxtName: address.isNotEmpty ? address : "",
+                              Txtfontweight: FontWeight.w500,
+                              Txtsize: 20,
+                              TxtColor: Colors.black87,
+                              textlength: 200,
+
+                            );
+                          },
+                        )
+
+                    ),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
