@@ -1,0 +1,58 @@
+from datetime import datetime, timedelta
+
+# Get today's and tomorrow's dates
+today = datetime.now().strftime("%d-%m-%Y")
+tomorrow = (datetime.now() + timedelta(days=1)).strftime("%d-%m-%Y")
+
+today_tasks = []
+tomorrow_plan = []
+
+# --- Add today's tasks ---
+print(f"📅 Activity Date: {today}")
+first_task = input("Enter today's task: ").strip()
+if first_task:
+    today_tasks.append(f"✅ {first_task}")
+
+    while True:
+        more = input("Add more tasks for today? (yes/no): ").strip().lower()
+        if more == "yes":
+            task = input("Enter task: ").strip()
+            if task:
+                today_tasks.append(f"✅ {task}")
+        else:
+            break
+
+# --- Add tomorrow's plan (using ✏️ symbol) ---
+print(f"\n📅 Plan for {tomorrow}")
+first_plan = input("Enter a plan for tomorrow: ").strip()
+if first_plan:
+    tomorrow_plan.append(f"✏️ {first_plan}")
+
+    while True:
+        more = input("Add more plans for tomorrow? (yes/no): ").strip().lower()
+        if more == "yes":
+            task = input("Enter plan: ").strip()
+            if task:
+                tomorrow_plan.append(f"✏️ {task}")
+        else:
+            break
+
+# --- Print the summary ---
+print("\n--- Daily Task Summary ---")
+print(f"📅 Activity Date: {today}")
+if today_tasks:
+    print("Today's Progress:")
+    for t in today_tasks:
+        print(t)
+else:
+    print("No tasks added for today.")
+
+print(f"\n📅 Plan for {tomorrow}:")
+if tomorrow_plan:
+    for t in tomorrow_plan:
+        print(t)
+else:
+    print("No plan added for tomorrow.")
+
+# --- Footer Signature ---
+print("\n\n— BITTU DEV\nFlutter Developer")
