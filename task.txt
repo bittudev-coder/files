@@ -56,3 +56,50 @@ else:
 
 # --- Footer Signature ---
 print("\n\n— BITTU DEV\nFlutter Developer")
+
+
+
+----------------------------------------------------------------------------------------
+from datetime import datetime, timedelta
+
+# Get today's and tomorrow's dates
+today = datetime.now().strftime("%d-%m-%Y")
+tomorrow = (datetime.now() + timedelta(days=1)).strftime("%d-%m-%Y")
+
+today_tasks = []
+tomorrow_plan = []
+
+# --- Get input string ---
+input_string = input("Enter tasks and plans (comma separated, '-' separates today's tasks and tomorrow's plans): ").strip()
+
+# Split the input string by "-" to separate today's tasks and tomorrow's plans
+if "-" in input_string:
+    today_part, tomorrow_part = input_string.split("-", 1)
+
+    # Split tasks for today and tomorrow by commas
+    today_tasks = [f"✅ {task.strip()}" for task in today_part.split(",") if task.strip()]
+    tomorrow_plan = [f"✏️ {task.strip()}" for task in tomorrow_part.split(",") if task.strip()]
+else:
+    # If no hyphen, treat all input as today's tasks
+    today_tasks = [f"✅ {task.strip()}" for task in input_string.split(",") if task.strip()]
+
+# --- Print Summary ---
+print("\n--- Daily Task Summary ---")
+print(f"📅 Activity Date: {today}")
+if today_tasks:
+    print("Today's Progress:")
+    for t in today_tasks:
+        print(t)
+else:
+    print("No tasks added for today.")
+
+print(f"\n📅 Plan for {tomorrow}:")
+if tomorrow_plan:
+    for t in tomorrow_plan:
+        print(t)
+else:
+    print("No plan added for tomorrow.")
+
+# --- Footer Signature ---
+print("\n\n— BITTU DEV\nFlutter Developer")
+
