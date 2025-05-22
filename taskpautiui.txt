@@ -1,0 +1,70 @@
+from datetime import datetime, timedelta
+import pyautogui
+import time
+
+# Get today's and tomorrow's dates
+today = datetime.now().strftime("%d-%m-%Y")
+tomorrow = (datetime.now() + timedelta(days=1)).strftime("%d-%m-%Y")
+
+today_tasks = []
+tomorrow_plan = []
+
+# --- Add today's tasks ---
+print(f"📅 Activity Date: {today}")
+first_task = input("Enter today's task: ").strip()
+if first_task:
+    today_tasks.append(f"✅ {first_task}")
+
+    while True:
+        more = input("Add more tasks for today? (yes/no): ").strip().lower()
+        if more == "yes":
+            task = input("Enter task: ").strip()
+            if task:
+                today_tasks.append(f"✅ {task}")
+        else:
+            break
+
+# --- Add tomorrow's plan ---
+print(f"\n📅 Plan for {tomorrow}")
+first_plan = input("Enter a plan for tomorrow: ").strip()
+if first_plan:
+    tomorrow_plan.append(f"✏️ {first_plan}")
+
+    while True:
+        more = input("Add more plans for tomorrow? (yes/no): ").strip().lower()
+        if more == "yes":
+            task = input("Enter plan: ").strip()
+            if task:
+                tomorrow_plan.append(f"✏️ {task}")
+        else:
+            break
+
+# --- Prepare summary ---
+summary_lines = []
+summary_lines.append("--- Daily Task Summary ---")
+summary_lines.append(f"📅 Activity Date: {today}")
+
+if today_tasks:
+    summary_lines.append("Today's Progress:")
+    summary_lines += today_tasks
+else:
+    summary_lines.append("No tasks added for today.")
+
+summary_lines.append(f"\n📅 Plan for {tomorrow}:")
+if tomorrow_plan:
+    summary_lines += tomorrow_plan
+else:
+    summary_lines.append("No plan added for tomorrow.")
+
+summary_lines.append("\n— BITTU DEV\nFlutter Developer")
+
+# --- Print to console ---
+print("\n" + "\n".join(summary_lines))
+
+# --- Auto-type using pyautogui ---
+input("\nPress Enter and then switch to Notepad or any text box within 5 seconds...")
+time.sleep(5)  # time to switch to a text editor
+
+for line in summary_lines:
+    pyautogui.typewrite(line)
+    pyautogui.press('enter')
